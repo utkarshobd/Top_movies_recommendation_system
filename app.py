@@ -47,7 +47,8 @@ def add_custom_css():
             display: flex;
             justify-content: center;
             gap: 15px;
-            flex-wrap: wrap;
+            flex-wrap: nowrap;
+            overflow-x: auto;
             padding-top: 20px;
         }
         .movie-item {
@@ -95,16 +96,17 @@ if st.button("Show Recommendations"):
     # HTML for displaying images in a row
     st.markdown('<div class="movie-container">', unsafe_allow_html=True)
     
-    for movie_name in recommended_movies:
-        poster_url = fetch_poster(movie_name)
-        st.markdown(
+    movie_items = "".join(
+        [
             f"""
             <div class="movie-item">
-                <img src="{poster_url}" alt="{movie_name}">
+                <img src="{fetch_poster(movie_name)}" alt="{movie_name}">
                 <p>{movie_name}</p>
             </div>
-            """,
-            unsafe_allow_html=True,
-        )
+            """
+            for movie_name in recommended_movies
+        ]
+    )
     
+    st.markdown(movie_items, unsafe_allow_html=True)
     st.markdown('</div>', unsafe_allow_html=True)
