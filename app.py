@@ -47,8 +47,7 @@ def add_custom_css():
             display: flex;
             justify-content: center;
             gap: 15px;
-            flex-wrap: nowrap;
-            overflow-x: auto;
+            flex-wrap: wrap;
             padding-top: 20px;
         }
         .movie-item {
@@ -82,7 +81,11 @@ def fetch_poster(movie_title):
 
 def recommend(movie):
     """Recommend movies based on similarity."""
+    if movie not in movies['title'].values:
+        return []
     index = movies[movies['title'] == movie].index[0]
+    if index >= len(similarity):
+        return []
     distance = sorted(list(enumerate(similarity[index])), reverse=True, key=lambda vector: vector[1])
     recommend_movie = []
     for i in distance[1:6]:
