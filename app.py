@@ -21,36 +21,50 @@ else:
 movies_list = movies['title'].values
 
 st.set_page_config(page_title="Movie Recommender", layout="wide")
-st.markdown(
-    """
-    <style>
-    body {
-        background-color: #f0f2f6;
-        font-family: Arial, sans-serif;
-    }
-    .stButton>button {
-        background-color: #4CAF50;
-        color: white;
-        border-radius: 5px;
-        padding: 10px 20px;
-    }
-    .movie-poster {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 20px;
-    }
-    .movie-item {
-        text-align: center;
-        margin: 10px;
-    }
-    .movie-item img {
-        border-radius: 10px;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    }
-    </style>
-    """,
-    unsafe_allow_html=True,
-)
+
+# Custom CSS for better UI
+def add_custom_css():
+    st.markdown(
+        """
+        <style>
+        body {
+            background-color: #121212;
+            color: #ffffff;
+            font-family: Arial, sans-serif;
+        }
+        .stSelectbox label {
+            font-size: 18px;
+            font-weight: bold;
+        }
+        .stButton>button {
+            background-color: #ff4b4b;
+            color: white;
+            border-radius: 8px;
+            padding: 10px 20px;
+            font-size: 16px;
+        }
+        .movie-container {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+            padding-top: 20px;
+        }
+        .movie-item {
+            text-align: center;
+            width: 180px;
+        }
+        .movie-item img {
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(255, 255, 255, 0.2);
+            width: 100%;
+        }
+        </style>
+        """,
+        unsafe_allow_html=True,
+    )
+
+add_custom_css()
 
 st.header("🎥 Movie Recommender System")
 
@@ -77,16 +91,20 @@ def recommend(movie):
 if st.button("Show Recommendations"):
     recommended_movies = recommend(selectvalue)
     st.write("### Recommended Movies:")
-    st.markdown('<div class="movie-poster">', unsafe_allow_html=True)
+    
+    # HTML for displaying images in a row
+    st.markdown('<div class="movie-container">', unsafe_allow_html=True)
+    
     for movie_name in recommended_movies:
         poster_url = fetch_poster(movie_name)
         st.markdown(
             f"""
             <div class="movie-item">
-                <img src="{poster_url}" alt="{movie_name}" width="200">
+                <img src="{poster_url}" alt="{movie_name}">
                 <p>{movie_name}</p>
             </div>
             """,
             unsafe_allow_html=True,
         )
+    
     st.markdown('</div>', unsafe_allow_html=True)
