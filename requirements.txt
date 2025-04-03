@@ -1,0 +1,5 @@
+ipykernel
+ipython
+nltk
+scikit-learn
+streamlit
