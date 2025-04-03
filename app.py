@@ -20,24 +20,13 @@ else:
 
 movies_list = movies['title'].values
 
-# Set page configuration
 st.set_page_config(page_title="Movie Recommender", layout="wide")
-
-# Add custom CSS for styling
 st.markdown(
     """
     <style>
     body {
         background-color: #f0f2f6;
         font-family: Arial, sans-serif;
-    }
-    .header-box {
-        background-color: #e8f4f8;
-        padding: 20px;
-        border-radius: 10px;
-        text-align: center;
-        margin-bottom: 20px;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     }
     .stButton>button {
         background-color: #4CAF50;
@@ -47,7 +36,6 @@ st.markdown(
     }
     .movie-poster {
         display: flex;
-        justify-content: space-around;
         flex-wrap: wrap;
         gap: 20px;
     }
@@ -64,18 +52,8 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
-# Add a header box
-st.markdown(
-    """
-    <div class="header-box">
-        <h1>🎥 Movie Recommender System</h1>
-        <p>Find your next favorite movie based on your preferences!</p>
-    </div>
-    """,
-    unsafe_allow_html=True,
-)
+st.header("🎥 Movie Recommender System")
 
-# Dropdown for movie selection
 selectvalue = st.selectbox("Select a movie from the dropdown", movies_list)
 
 def fetch_poster(movie_title):
@@ -96,7 +74,6 @@ def recommend(movie):
         recommend_movie.append(movies.iloc[i[0]].title)
     return recommend_movie
 
-# Show recommendations in a row
 if st.button("Show Recommendations"):
     recommended_movies = recommend(selectvalue)
     st.write("### Recommended Movies:")
