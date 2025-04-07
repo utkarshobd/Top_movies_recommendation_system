@@ -96,8 +96,22 @@ if st.button("Show Recommendations"):
     recommended_movies = recommend(selectvalue)
     st.write("### Recommended Movies:")
     
-    # HTML for displaying images in a row
+    # HTML for displaying images and names in a row
     st.markdown('<div class="movie-container">', unsafe_allow_html=True)
+    
+    for movie_name in recommended_movies:
+        poster_url = fetch_poster(movie_name)
+        st.markdown(
+            f"""
+            <div class="movie-item">
+                <img src="{poster_url}" alt="{movie_name}" width="150">
+                <p style="margin-top: 10px; font-weight: bold;">{movie_name}</p>
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
+    
+    st.markdown('</div>', unsafe_allow_html=True)
     
     movie_items = "".join(
         [
