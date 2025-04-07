@@ -9,7 +9,6 @@ if not os.path.exists("movies_list.pkl") or not os.path.exists("similarity.pkl")
     # Generate the pickle files dynamically
     movies = pd.read_csv("top10K-TMDB-movies.csv")  # Ensure this file is included in your deployment
     similarity = ...  # Add logic to compute the similarity matrix
-
     # Save the generated data as pickle files
     pickle.dump(movies, open("movies_list.pkl", 'wb'))
     pickle.dump(similarity, open("similarity.pkl", 'wb'))
@@ -21,51 +20,6 @@ else:
 movies_list = movies['title'].values
 
 st.set_page_config(page_title="Movie Recommender", layout="wide")
-
-# Custom CSS for better UI
-def add_custom_css():
-    st.markdown(
-        """
-        <style>
-        body {
-            background-color: #121212;
-            color: #ffffff;
-            font-family: Arial, sans-serif;
-        }
-        .stSelectbox label {
-            font-size: 18px;
-            font-weight: bold;
-        }
-        .stButton>button {
-            background-color: #ff4b4b;
-            color: white;
-            border-radius: 8px;
-            padding: 10px 20px;
-            font-size: 16px;
-        }
-        .movie-container {
-            display: flex;
-            justify-content: center;
-            gap: 15px;
-            flex-wrap: wrap;
-            padding-top: 20px;
-        }
-        .movie-item {
-            text-align: center;
-            width: 180px;
-        }
-        .movie-item img {
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(255, 255, 255, 0.2);
-            width: 100%;
-        }
-        </style>
-        """,
-        unsafe_allow_html=True,
-    )
-
-add_custom_css()
-
 st.header("🎥 Movie Recommender System")
 
 selectvalue = st.selectbox("Select a movie from the dropdown", movies_list)
@@ -88,42 +42,30 @@ def recommend(movie):
         return []
     distance = sorted(list(enumerate(similarity[index])), reverse=True, key=lambda vector: vector[1])
     recommend_movie = []
-    for i in distance[1:6]:
+    for i in distance[1:11]:  # Increased to potentially show more movies
         recommend_movie.append(movies.iloc[i[0]].title)
     return recommend_movie
 
 if st.button("Show Recommendations"):
     recommended_movies = recommend(selectvalue)
     st.write("### Recommended Movies:")
-    
-    # HTML for displaying images and names in a row
-    st.markdown('<div class="movie-container">', unsafe_allow_html=True)
-    
-    for movie_name in recommended_movies:
-        poster_url = fetch_poster(movie_name)
-        st.markdown(
-            f"""
-            <div class="movie-item">
-                <img src="{poster_url}" alt="{movie_name}" width="150">
-                <p style="margin-top: 10px; font-weight: bold;">{movie_name}</p>
-            </div>
-            """,
-            unsafe_allow_html=True,
-        )
-    
-    st.markdown('</div>', unsafe_allow_html=True)
-    
-    movie_items = "".join(
-        [
-            f"""
-            <div class="movie-item">
-                <img src="{fetch_poster(movie_name)}" alt="{movie_name}">
-                <p>{movie_name}</p>
-            </div>
-            """
-            for movie_name in recommended_movies
-        ]
-    )
-    
-    st.markdown(movie_items, unsafe_allow_html=True)
-    st.markdown('</div>', unsafe_allow_html=True)
+
+    max_cols = 5
+    first_row = recommended_movies[:5]
+    second_row = recommended_movies[5:]
+
+    # Show first 5 movies
+    cols = st.columns(max_cols)
+    for i, movie_name in enumerate(first_row):
+        with cols[i]:
+            poster_url = fetch_poster(movie_name)
+            st.image(poster_url, caption=movie_name, width=150)
+
+    # Show the next row if there are more movies
+    if second_row:
+        st.markdown("### People also like these movies:")
+        cols = st.columns(len(second_row))  # create just enough columns
+        for i, movie_name in enumerate(second_row):
+            with cols[i]:
+                poster_url = fetch_poster(movie_name)
+                st.image(poster_url, caption=movie_name, width=150)
