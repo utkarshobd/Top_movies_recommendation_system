@@ -18,7 +18,7 @@ else:
 
 movies_list = movies['title'].values
 
-st.set_page_config(page_title="Movie Recommender", layout="wide")
+st.set_page_config(page_title="Movie Recommender", layout="wide")--
 
 # Inject CSS + JavaScript
 st.markdown("""
@@ -93,7 +93,7 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # Header with styled box
-st.markdown("<div class='header-box'><h1>🎥 Welcome to OBD's Cinema</h1></div>", unsafe_allow_html=True)
+st.markdown("<div class='header-box'><h1>🎥 Welcome to B-2 Cinema</h1></div>", unsafe_allow_html=True)
 st.markdown("<h4 style='font-size:20px; font-weight:600;'>🎬 Get a similar movie that you just finished</h4>", unsafe_allow_html=True)
 selectvalue = st.selectbox("", movies_list)
 
