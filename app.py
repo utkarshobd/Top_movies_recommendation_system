@@ -18,7 +18,7 @@ else:
 
 movies_list = movies['title'].values
 
-st.set_page_config(page_title="Movie Recommender", layout="wide")--
+st.set_page_config(page_title="Movie Recommender", layout="wide")
 
 # Inject CSS + JavaScript
 st.markdown("""
