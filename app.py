@@ -5,15 +5,22 @@ import pandas as pd
 import requests
 import urllib.parse
 import time
+from sklearn.feature_extraction.text import CountVectorizer
+from sklearn.metrics.pairwise import cosine_similarity
 
 # Load or generate data
 if not os.path.exists("movies_list.pkl") or not os.path.exists("similarity.pkl"):
-    movies = pd.read_csv("top10K-TMDB-movies.csv")
-    similarity = ...  # Add logic here
+    raw = pd.read_csv("top10K-TMDB-movies.csv")
+    raw = raw[['id', 'title', 'overview', 'genre']].fillna('')
+    raw['tags'] = raw['overview'] + raw['genre']
+    movies = raw[['id', 'title', 'tags']]
+    cv = CountVectorizer(max_features=10000, stop_words='english')
+    vector = cv.fit_transform(movies['tags'].values.astype('U')).toarray()
+    similarity = cosine_similarity(vector)
     pickle.dump(movies, open("movies_list.pkl", 'wb'))
     pickle.dump(similarity, open("similarity.pkl", 'wb'))
 else:
-    movies = pickle.load(open("movies_list.pkl", 'rb'))
+    movies = pickle.load(open("movies_list.pkl", 'rb')).reset_index(drop=True)
     similarity = pickle.load(open("similarity.pkl", 'rb'))
 
 movies_list = movies['title'].values
@@ -113,9 +120,8 @@ def imdb_link(movie_title):
 def recommend(movie):
     if movie not in movies['title'].values:
         return []
-    index = movies[movies['title'] == movie].index[0]
-    if index >= len(similarity):
-        return []
+    index = movies.reset_index(drop=True)
+    index = index[index['title'] == movie].index[0]
     distance = sorted(list(enumerate(similarity[index])), reverse=True, key=lambda vector: vector[1])
     return [movies.iloc[i[0]].title for i in distance[1:11]]
 
