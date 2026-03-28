@@ -1,4 +1,5 @@
 # Movie Recommendation App - Updated
+# Author: Utkarsh
 import streamlit as st
 import pickle
 import os
