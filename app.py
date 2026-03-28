@@ -1,5 +1,6 @@
 # Movie Recommendation App - Updated
 # Author: Utkarsh
+# Dataset: Top 10K TMDB Movies
 import streamlit as st
 import pickle
 import os
